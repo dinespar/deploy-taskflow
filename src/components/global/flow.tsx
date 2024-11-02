@@ -14,41 +14,53 @@ import {
     Connection,
     Node,
     Edge,
-    ReactFlowInstance
+    ReactFlowInstance,
+    NodeTypes,
 } from '@xyflow/react';
 import { useFlow } from '@/providers/flow-provider';
 import CustomNode from './custom-node';
 
-interface CustomNodeData {
+export interface CustomNodeData extends Record<string, unknown> {
     icon?: string;
     name?: string;
     description?: string;
 }
 
-const nodeTypes = { customNode: CustomNode };
+const nodeTypes: NodeTypes = { customNode: CustomNode };
 
 const Flow: React.FC = () => {
     const { nodes, setNodes, edges, setEdges, setSelectedNode } = useFlow();
 
     const onNodesChange = useCallback(
-        (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
-        [setNodes]
+        (changes: NodeChange[]) => {
+            const updatedNodes = applyNodeChanges(changes, nodes);
+            setNodes(updatedNodes);
+        },
+        [setNodes, nodes]
     );
+
     const onEdgesChange = useCallback(
-        (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-        [setEdges]
+        (changes: EdgeChange[]) => {
+            const updatedEdges = applyEdgeChanges(changes, edges);
+            setEdges(updatedEdges);
+        },
+        [setEdges, edges]
     );
+
     const onConnect = useCallback(
-        (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-        [setEdges]
+        (params: Connection) => {
+            const updatedEdges = addEdge(params, edges);
+            setEdges(updatedEdges);
+        },
+        [setEdges, edges]
     );
 
     const onDrop = useCallback(
-        (event: React.DragEvent) => {
+        (event: React.DragEvent<HTMLDivElement>) => {
             event.preventDefault();
             const data: CustomNodeData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
             const rect = (event.target as HTMLElement).getBoundingClientRect();
-            const newNode: Node = {
+            const newNode: Node<CustomNodeData> = {
                 id: `${Math.random()}`,
                 type: 'customNode',
                 position: {
@@ -60,14 +72,14 @@ const Flow: React.FC = () => {
                     name: data.name || 'Default Name',
                 },
             };
-            console.log('New Node created:', newNode); // Log the node creation
+            console.log('New Node created:', newNode);
 
-            setNodes((nds) => nds.concat(newNode));
+            setNodes([...nodes, newNode]);
         },
-        [setNodes]
+        [setNodes, nodes]
     );
 
-    const onDragOver = useCallback((event: React.DragEvent) => {
+    const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
     }, []);
 
@@ -83,7 +95,7 @@ const Flow: React.FC = () => {
                 edges={edges}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
-                fitView = {false}
+                fitView={false}
                 style={{ height: '100%', width: '100%', color: 'black' }}
                 nodeTypes={nodeTypes}
                 onNodeClick={onNodeClick}

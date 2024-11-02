@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { db } from '@/lib/db';
 import { getAuth } from '@clerk/nextjs/server';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { userId } = getAuth(request);
 
   if (!userId) {

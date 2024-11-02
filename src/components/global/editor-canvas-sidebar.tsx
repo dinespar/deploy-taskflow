@@ -13,6 +13,7 @@ import RenderAccordion from './render-accordion';
 import { toast } from 'sonner';
 import { useNodeConnections } from '@/providers/connection-provider';
 import { useFlowStore } from '@/store';
+import { ConnectionTypes } from '@/lib/types';
 
 interface CustomNodeData {
   icon?: string;
@@ -23,9 +24,17 @@ interface CustomNodeData {
 const EditorCanvasSidebar: React.FC = () => {
   const { nodes, edges, setNodes, setEdges, selectedNode, setSelectedNode } = useFlow();
   const [workflowId, setWorkflowId] = useState<string>('');
-  const [connections, setConnections] = useState<Record<string, boolean>>({});
-  const [filteredConnections, setFilteredConnections] = useState<Record<string, boolean>>({});
-  const { slackChannels, selectedSlackChannels, setSelectedSlackChannels } = useFlowStore()
+  const [filteredConnections, setFilteredConnections] = useState<Record<ConnectionTypes, boolean>>({
+    Discord: false,
+    Notion: false,
+    Slack: false,
+    GoogleDrive: false,
+    ChatGPT: false,
+    LinkedIn: false,
+    Instagram: false,
+    WhatsApp: false
+  });
+  const { slackChannels, selectedSlackChannels, setSelectedSlackChannels } = useFlowStore();
 
   const handleDragStart = (event: React.DragEvent, card: CustomNodeData) => {
     event.dataTransfer.setData('application/reactflow', JSON.stringify(card));
@@ -90,6 +99,8 @@ const EditorCanvasSidebar: React.FC = () => {
     }
   }, []);
 
+
+
   const fetchWorkflow = useCallback(async (workflowId: string) => {
     try {
       const response = await fetch(`/api/get-workflow?workflowId=${workflowId}`);
@@ -139,10 +150,22 @@ const EditorCanvasSidebar: React.FC = () => {
       const { connections } = await response.json();
       console.log('Fetched node connections:', connections);
 
-      const connectionsMap = connections.reduce((acc: Record<string, boolean>, conn: { type: string }) => {
-        acc[conn.type] = true;
-        return acc;
-      }, {});
+      // Initialize all connections as false
+      const connectionsMap: Record<ConnectionTypes, boolean> = {
+        Discord: false,
+        Notion: false,
+        Slack: false,
+        GoogleDrive: false,
+        ChatGPT: false,
+        LinkedIn: false,
+        Instagram: false,
+        WhatsApp: false
+      };
+
+      // Update only the connections that are true
+      connections.forEach((conn: { type: ConnectionTypes }) => {
+        connectionsMap[conn.type] = true;
+      });
 
       setFilteredConnections(connectionsMap);
     } catch (error) {
@@ -154,7 +177,16 @@ const EditorCanvasSidebar: React.FC = () => {
     if (selectedNode) {
       fetchNodeConnections(selectedNode.id);
     } else {
-      setFilteredConnections({});
+      setFilteredConnections({
+        Discord: false,
+        Notion: false,
+        Slack: false,
+        GoogleDrive: false,
+        ChatGPT: false,
+        LinkedIn: false,
+        Instagram: false,
+        WhatsApp: false
+      });
     }
   }, [selectedNode, fetchNodeConnections]);
 
@@ -200,21 +232,20 @@ const EditorCanvasSidebar: React.FC = () => {
             </p>
             {Object.keys(filteredConnections).length > 0 ? (
               CONNECTIONS.filter(connection =>
-                filteredConnections[connection.title]
+                filteredConnections[connection.title as ConnectionTypes]
               ).map((connection) => (
                 <ConnectionCard
                   key={connection.title}
-                  connected={filteredConnections[connection.title]}
+                  connected={filteredConnections}
                 />
               ))
             ) : (
               <p></p>
             )}
             <RenderAccordion
-              selectedNode={selectedNode}
-              nodeConnection={nodeConnection}
-              setChannels={setSelectedSlackChannels}
-            />
+        selectedNode={selectedNode}
+        nodeConnection={nodeConnection}
+      />
           </div>
         </TabsContent>
       </Tabs>

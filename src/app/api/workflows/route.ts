@@ -2,11 +2,8 @@ import db from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
-
-
-//Workflows fetch karne ke liye function
-export async function GET(req: NextResponse) {
-
+// GET: Fetch workflows
+export async function GET(req: NextRequest) {
   try {
     const userClerk = await currentUser();
 
@@ -27,13 +24,10 @@ export async function GET(req: NextResponse) {
   }
 }
 
-
-
-//Workflows post karne ke liye function
+// POST: Create workflow
 export async function POST(req: NextRequest) {
-  const { name, description } = await req.json();
-
   try {
+    const { name, description } = await req.json();
     const userClerk = await currentUser();
 
     if (!userClerk || !userClerk.id) {
@@ -54,7 +48,6 @@ export async function POST(req: NextRequest) {
     }
 
     const workflow = await db.workflows.create({
-      // @ts-ignore
       data: {
         name,
         description,
@@ -62,19 +55,14 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // console.log(workflow)
-
     return NextResponse.json({ workflow }, { status: 201 });
-
   } catch (error) {
     console.error("Error creating workflow:", error);
     return NextResponse.json({ msg: "Internal server error" }, { status: 500 });
   }
 }
 
-
-
-//Workflows delete karne ke liye function
+// DELETE: Remove workflow
 export async function DELETE(req: NextRequest) {
   try {
     const userClerk = await currentUser();
@@ -82,7 +70,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ msg: "User is not authenticated" }, { status: 401 });
     }
 
-    const { workflowId } = await req.json(); // Parse workflowId from the request body
+    const { workflowId } = await req.json();
 
     if (!workflowId) {
       return NextResponse.json({ msg: "Workflow ID is required" }, { status: 400 });
@@ -102,9 +90,7 @@ export async function DELETE(req: NextRequest) {
   }
 }
 
-
-
-//Workflows update karne ke liye function
+// PATCH: Update workflow
 // export async function PATCH(req: NextRequest) {
 //   try {
 //     const userClerk = await currentUser();
@@ -131,7 +117,11 @@ export async function DELETE(req: NextRequest) {
 
 //     return NextResponse.json({ msg: "Workflow updated", workflow }, { status: 200 });
 //   } catch (error) {
-//     console.error("Error updating workflow:", error); // Add more detailed logging if needed
+//     console.error("Error updating workflow:", error);
 //     return NextResponse.json({ msg: "Internal server error" }, { status: 500 });
 //   }
 // }
+
+// Optional configuration
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;

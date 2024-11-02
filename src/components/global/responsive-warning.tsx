@@ -21,7 +21,7 @@ const ResponsiveWarning = () => {
                 <p className="text-white text-xl mb-4">
                     This site is allergic to small displays. Please view on desktop or watch the demo below.
                     <br/>
-                    Sorry for the inconvenience. Here's a picture of a cute cat instead:
+                    Sorry for the inconvenience. Here is a picture of a cute cat instead:
                 </p>
                 {/* Image placeholder */}
                 <div className="flex justify-center w-full mt-4">

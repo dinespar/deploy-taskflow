@@ -52,6 +52,7 @@ type ConnectionWithChildProps = {
 }
 
 const InitialValues: ConnectionProviderProps = {
+  workflowId: '',
   discordNode: {
     webhookURL: '',
     content: '',
@@ -103,6 +104,7 @@ export const ConnectionsProvider = ({ children }: ConnectionWithChildProps) => {
   )
 
   const values = {
+    workflowId: InitialValues.workflowId,
     discordNode,
     setDiscordNode,
     googleNode,

@@ -1,31 +1,39 @@
-import { create } from 'zustand'
+import { create } from 'zustand';
+import { Node } from '@xyflow/react';
 
 export interface Option {
-  value: string
-  label: string
-  disable?: boolean
-  /** fixed option that can't be removed. */
-  fixed?: boolean
-  /** Group the options by providing key. */
-  [key: string]: string | boolean | undefined
+    value: string;
+    label: string;
+    disable?: boolean;
+    /** fixed option that can't be removed. */
+    fixed?: boolean;
+    /** Group the options by providing key. */
+    [key: string]: string | boolean | undefined;
 }
 
-type FlowStore = {
-  googleFile: any
-  setGoogleFile: (googleFile: any) => void
-  slackChannels: Option[]
-  setSlackChannels: (slackChannels: Option[]) => void
-  selectedSlackChannels: Option[]
-  setSelectedSlackChannels: (selectedSlackChannels: Option[]) => void
+interface GoogleFile {
+    id: string;
+    name: string;
+    mimeType: string;
+    // Add other properties as needed
+    [key: string]: any;
 }
 
-export const useFlowStore = create<FlowStore>()((set) => ({
-  googleFile: {},
-  setGoogleFile: (googleFile: any) => set({ googleFile }),
-  slackChannels: [],
-  setSlackChannels: (slackChannels: Option[]) => set({ slackChannels }),
-  selectedSlackChannels: [],
-  setSelectedSlackChannels: (selectedSlackChannels: Option[]) =>
-    set({ selectedSlackChannels }),
-}))
+interface FlowStore {
+    googleFile: GoogleFile;
+    setGoogleFile: (googleFile: GoogleFile) => void;
+    slackChannels: Option[];
+    setSlackChannels: (slackChannels: Option[]) => void;
+    selectedSlackChannels: Option[];
+    setSelectedSlackChannels: (selectedSlackChannels: Option[]) => void;
+}
 
+export const useFlowStore = create<FlowStore>((set) => ({
+    googleFile: {} as GoogleFile,
+    setGoogleFile: (googleFile: GoogleFile) => set({ googleFile }),
+    slackChannels: [],
+    setSlackChannels: (slackChannels: Option[]) => set({ slackChannels }),
+    selectedSlackChannels: [],
+    setSelectedSlackChannels: (selectedSlackChannels: Option[]) =>
+        set({ selectedSlackChannels }),
+}));
