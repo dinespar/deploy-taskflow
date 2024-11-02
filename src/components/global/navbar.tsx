@@ -45,7 +45,10 @@ const Navbar = async (props: Props) => {
         </ul>
       </nav>
       <div className="flex items-center gap-4">
-        <Link href="/dashboard"><Button variant="outline" size="sm">Dashboard</Button></Link>
+        <Link href="/dashboard"><Button variant="outline" size="sm" className="hidden md:block">
+          Dashboard
+        </Button>
+        </Link>
         <UserButton />
         <MenuIcon className="md:hidden" />
       </div>
