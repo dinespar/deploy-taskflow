@@ -32,7 +32,7 @@ const ConnectionCard = ({ connected }: Props) => {
                             </CardHeader>
                             <div className="flex flex-col items-center gap-2 p-4">
                                 {connected[connection.title] ? (
-                                    <div className="border-bg-primary rounded-lg border-2 px-3 py-2 text-white">
+                                    <div className="border-bg-primary rounded-lg border-2 px-3 py-2 dark:text-white : text-black">
                                         Connected
                                     </div>
                                 ) : (
@@ -54,7 +54,7 @@ const ConnectionCard = ({ connected }: Props) => {
                                                                         ? process.env.NEXT_PUBLIC_CHATGPT_REDIRECT || '#'
                                                                         : '#'
                                         }
-                                        className="rounded-lg bg-primary p-2 font-bold text-primary-foreground"
+                                        className="rounded-lg bg-primary p-2 font-bold dark:text-black : text-white"
                                     >
                                         Connect
                                     </Link>

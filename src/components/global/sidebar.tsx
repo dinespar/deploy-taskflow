@@ -1,5 +1,6 @@
-"use client";
-import React, { useEffect, useState } from "react";
+'use client';
+
+import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { HiOutlineHome } from "react-icons/hi2";
@@ -10,16 +11,8 @@ import { BsCreditCard2Front } from "react-icons/bs";
 import { LuLayoutTemplate } from "react-icons/lu";
 import { RiTodoLine } from "react-icons/ri";
 
-
 function Sidebar() {
   const pathname = usePathname();
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsDarkMode(document.documentElement.classList.contains("dark"));
-    }
-  }, []);
 
   const menuItems = [
     { href: "/dashboard", icon: HiOutlineHome, label: "Home" },
@@ -32,7 +25,7 @@ function Sidebar() {
   ];
 
   return (
-    <div className="h-screen  border-r">
+    <div className="h-screen border-r">
       <div className="space-y-1 px-4">
         <ul className="flex flex-col space-y-2 font-roobert pt-6">
           {menuItems.map((item) => (
@@ -41,12 +34,12 @@ function Sidebar() {
                 href={item.href}
                 className={`flex gap-2 rounded-lg px-4 py-2 text-sm
                   ${pathname === item.href
-                    ? `bg-primary font-bold ${isDarkMode ? "text-black" : "text-white"}`
-                    : `text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-500 hover:text-gray-700`}
+                    ? "bg-primary font-bold text-white dark:text-black"
+                    : "text-gray-500 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-500 hover:text-gray-700"}
                 `}
               >
                 <item.icon
-                  className={`w-5 h-5 ${pathname === item.href ? (isDarkMode ? "text-black" : "text-white") : ""}`}
+                  className={`w-5 h-5 ${pathname === item.href ? "text-white dark:text-black" : ""}`}
                 />
                 <span>{item.label}</span>
               </Link>
