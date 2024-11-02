@@ -36,7 +36,7 @@ const ResponsiveWarning = () => {
                     <iframe
                         width="300"
                         height="200"
-                        src="https://youtu.be/rIV-jcotYFI"
+                        src="https://www.youtube.com/embed/rIV-jcotYFI"
                         title="YouTube video player"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
